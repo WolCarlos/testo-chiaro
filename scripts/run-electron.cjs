@@ -11,7 +11,7 @@ const child = spawn(electron, args.length ? args : ['.'], {
 });
 
 child.on('error', (error) => {
-  console.error('Impossibile avviare Testo Chiaro:', error.message);
+  console.error('Impossibile avviare Wol Edit Text:', error.message);
   process.exit(1);
 });
 child.on('close', (code) => process.exit(code ?? 1));

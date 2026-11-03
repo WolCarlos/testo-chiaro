@@ -85,6 +85,12 @@ async function run() {
   assert.equal(previewThemeResult.saved, 'dark');
   assert.equal(previewThemeResult.copyButton, true);
 
+  await window.webContents.executeJavaScript(`document.querySelector('#focusPreviewButton').click()`);
+  const focused = await window.webContents.executeJavaScript(`document.activeElement.id`);
+  assert.equal(focused, 'preview');
+  const screenshot = await window.webContents.capturePage();
+  await fs.writeFile(path.join(artifacts, 'testo-chiaro-windows.png'), screenshot.toPNG());
+
   const updatePanelResult = await window.webContents.executeJavaScript(`(async () => {
     document.querySelector('#updateButton').click();
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -94,18 +100,13 @@ async function run() {
       version: document.querySelector('#currentVersion').textContent
     };
     document.querySelector('#closeUpdateDialog').click();
+    result.closed = !document.querySelector('#updateDialog').open;
     return result;
   })()`);
   assert.equal(updatePanelResult.open, true);
+  assert.equal(updatePanelResult.closed, true);
   assert(updatePanelResult.text.includes('versione desktop installata'));
-  assert(updatePanelResult.version.includes('1.2.0'));
-
-  await window.webContents.executeJavaScript(`document.querySelector('#focusPreviewButton').click()`);
-  const focused = await window.webContents.executeJavaScript(`document.activeElement.id`);
-  assert.equal(focused, 'preview');
-
-  const screenshot = await window.webContents.capturePage();
-  await fs.writeFile(path.join(artifacts, 'testo-chiaro-windows.png'), screenshot.toPNG());
+  assert(updatePanelResult.version.includes('1.3.0'));
 
   const printWindow = new BrowserWindow({ show: false, webPreferences: { sandbox: true, javascript: false } });
   const printable = `<!doctype html><html lang="it"><head><meta charset="utf-8"><style>@page{size:A4;margin:22mm}body{font-family:Arial,sans-serif;font-size:11pt;line-height:1.5;color:#111827}table{border-collapse:collapse;width:100%}td,th{border:1px solid #bbb;padding:8px}</style></head><body><main>${markdownResult.html}</main></body></html>`;

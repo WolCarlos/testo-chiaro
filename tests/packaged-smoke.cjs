@@ -3,7 +3,7 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const { version } = require('../package.json');
 
-const executable = path.join(__dirname, '..', 'packages', version, 'win-unpacked', 'Testo Chiaro.exe');
+const executable = path.join(__dirname, '..', 'packages', version, 'win-unpacked', 'Wol Edit Text.exe');
 const onlineUpdateTest = process.env.TESTO_CHIARO_ONLINE_TEST === '1';
 const environment = { ...process.env };
 delete environment.ELECTRON_RUN_AS_NODE;
@@ -79,7 +79,7 @@ async function run() {
   });
   if (evaluation.exceptionDetails) throw new Error(evaluation.exceptionDetails.text);
   const result = evaluation.result.value;
-  assert.equal(result.title, 'Testo Chiaro');
+  assert.equal(result.title, 'Wol Edit Text');
   assert(result.html.includes('<strong>Versione installata</strong>'));
   assert(!result.html.includes('background-color'));
   assert.equal(result.pdfBridge, true);

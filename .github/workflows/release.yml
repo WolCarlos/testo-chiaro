@@ -37,8 +37,8 @@ jobs:
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           gh release create "$GITHUB_REF_NAME" \
-            "packages/${VERSION}/Testo-Chiaro-${VERSION}-win-x64.exe" \
-            "packages/${VERSION}/Testo-Chiaro-${VERSION}-win-x64.exe.blockmap" \
+            "packages/${VERSION}/Wol-Edit-Text-${VERSION}-win-x64.exe" \
+            "packages/${VERSION}/Wol-Edit-Text-${VERSION}-win-x64.exe.blockmap" \
             "packages/${VERSION}/latest.yml" \
-            --title "Testo Chiaro ${VERSION}" \
+            --title "Wol Edit Text ${VERSION}" \
             --generate-notes

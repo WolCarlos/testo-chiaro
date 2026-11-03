@@ -467,7 +467,7 @@ function renderUpdateStatus(payload = {}) {
     : status === 'downloading' ? `Aggiornamento ${payload.percent || 0}%`
       : status === 'available' ? 'Download…'
         : status === 'checking' ? 'Controllo…' : 'Aggiornamenti';
-  if (status === 'downloaded') announce(`Testo Chiaro ${payload.version || ''} è pronto per l’installazione.`);
+  if (status === 'downloaded') announce(`Wol Edit Text ${payload.version || ''} è pronto per l’installazione.`);
 }
 
 async function checkForUpdates() {

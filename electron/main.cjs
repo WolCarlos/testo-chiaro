@@ -4,6 +4,10 @@ const path = require('node:path');
 const fs = require('node:fs/promises');
 const { pathToFileURL } = require('node:url');
 
+app.setName('Wol Edit Text');
+// Mantiene le preferenze della versione precedente dopo il cambio di nome.
+app.setPath('userData', path.join(app.getPath('appData'), 'Testo Chiaro'));
+
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true } },
 ]);
@@ -20,7 +24,8 @@ function createWindow() {
     show: false,
     backgroundColor: '#f2f5f2',
     autoHideMenuBar: true,
-    title: 'Testo Chiaro',
+    icon: path.join(__dirname, '..', 'build', 'icon.png'),
+    title: 'Wol Edit Text',
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
@@ -212,7 +217,7 @@ function setupAutoUpdates() {
         defaultId: 0,
         cancelId: 1,
         title: 'Aggiornamento pronto',
-        message: `Testo Chiaro ${info.version} è pronto per essere installato.`,
+        message: `Wol Edit Text ${info.version} è pronto per essere installato.`,
         detail: 'Il download è completato. Riavvia ora per applicare l’aggiornamento oppure installalo alla prossima chiusura dell’app.',
       });
       if (result.response === 0) autoUpdater.quitAndInstall(false, true);

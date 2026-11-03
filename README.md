@@ -1,6 +1,8 @@
-# Testo Chiaro
+# Wol Edit Text
 
-Testo Chiaro è un’app desktop locale per pulire la formattazione dei testi copiati, convertire Markdown ed esportare documenti leggibili in PDF, HTML, Markdown o TXT.
+<img src="build/icon.png" alt="Icona di Wol Edit Text" width="112" />
+
+Wol Edit Text è un’app desktop locale per pulire la formattazione dei testi copiati, convertire Markdown ed esportare documenti leggibili in PDF, HTML, Markdown o TXT.
 
 ## Funzioni principali
 
