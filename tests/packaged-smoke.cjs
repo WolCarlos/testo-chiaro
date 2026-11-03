@@ -4,10 +4,11 @@ const assert = require('node:assert/strict');
 const { version } = require('../package.json');
 
 const executable = path.join(__dirname, '..', 'packages', version, 'win-unpacked', 'Testo Chiaro.exe');
+const onlineUpdateTest = process.env.TESTO_CHIARO_ONLINE_TEST === '1';
 const environment = { ...process.env };
 delete environment.ELECTRON_RUN_AS_NODE;
 delete environment.VITE_DEV_SERVER_URL;
-environment.TESTO_CHIARO_DISABLE_UPDATES = '1';
+environment.TESTO_CHIARO_DISABLE_UPDATES = onlineUpdateTest ? '0' : '1';
 const child = spawn(executable, ['--remote-debugging-port=9223', '--no-first-run'], {
   env: environment,
   stdio: 'ignore',
@@ -59,6 +60,7 @@ async function run() {
       editor.dispatchEvent(new Event('input', { bubbles: true }));
       await new Promise(resolve => setTimeout(resolve, 100));
       const updateCheck = await window.testoChiaro.checkForUpdates();
+      await new Promise(resolve => setTimeout(resolve, 300));
       return {
         title: document.title,
         html: document.querySelector('#preview').innerHTML,
@@ -66,6 +68,8 @@ async function run() {
         saveBridge: typeof window.testoChiaro?.saveText === 'function',
         updateBridge: typeof window.testoChiaro?.installUpdate === 'function',
         updateStatus: updateCheck.status,
+        updateOk: updateCheck.ok,
+        updatePanelText: document.querySelector('#updateStatusText').textContent,
         appVersion: await window.testoChiaro.getVersion(),
         readingRole: document.querySelector('#preview').getAttribute('role')
       };
@@ -81,7 +85,12 @@ async function run() {
   assert.equal(result.pdfBridge, true);
   assert.equal(result.saveBridge, true);
   assert.equal(result.updateBridge, true);
-  assert.equal(result.updateStatus, 'development');
+  if (onlineUpdateTest) {
+    assert.equal(result.updateOk, true);
+    assert(result.updatePanelText.includes('ultima versione'));
+  } else {
+    assert.equal(result.updateStatus, 'development');
+  }
   assert.equal(result.appVersion, version);
   assert.equal(result.readingRole, 'document');
   console.log(JSON.stringify({ result: 'OK', packagedApp: result }, null, 2));
