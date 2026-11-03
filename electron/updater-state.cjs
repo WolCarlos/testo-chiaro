@@ -53,7 +53,7 @@ async function prepareVersionState({ userDataPath, currentVersion, cacheDirector
 
   const versionChanged = previousVersion !== currentVersion;
   if (cleanCache) {
-    if (previousVersion && versionChanged) {
+    if (versionChanged) {
       await fs.rm(cacheDirectory, { recursive: true, force: true });
     } else {
       await removeStaleCacheEntries(cacheDirectory);

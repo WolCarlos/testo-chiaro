@@ -30,6 +30,16 @@ describe('stato versione e novità', () => {
     expect(second.previousVersion).toBe('1.4.0');
   });
 
+  it('elimina la cache legacy anche al primo avvio di una nuova versione', async () => {
+    const installer = path.join(cacheDirectory, 'installer-versione-precedente.exe');
+    await fs.writeFile(installer, 'installer simulato');
+    const first = await prepareVersionState({ userDataPath, currentVersion: '1.4.0', cacheDirectory, cleanCache: true });
+
+    expect(first.previousVersion).toBe(null);
+    expect(first.showWhatsNew).toBe(true);
+    await expect(fs.stat(cacheDirectory)).rejects.toMatchObject({ code: 'ENOENT' });
+  });
+
   it('elimina la cache degli installer dopo un cambio di versione', async () => {
     const installer = path.join(cacheDirectory, 'vecchio-installer.exe');
     await fs.writeFile(installer, 'installer simulato');
