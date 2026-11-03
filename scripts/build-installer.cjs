@@ -1,6 +1,7 @@
 process.noAsar = true;
 
 const path = require('node:path');
+require('electron');
 const { build, Platform } = require('electron-builder');
 const { version } = require('../package.json');
 
@@ -17,6 +18,7 @@ if (!configuration) {
 
 build({
   targets: configuration.platform.createTarget([configuration.target]),
+  publish: 'never',
   config: {
     directories: { output: path.join('packages', version) },
   },
