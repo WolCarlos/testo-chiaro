@@ -1,6 +1,6 @@
 {
   "name": "wol-edit-text",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "private": true,
   "description": "Pulizia della formattazione, conversione Markdown ed esportazione PDF locale.",
   "type": "module",
@@ -45,7 +45,9 @@
       "licenses/**/*",
       "PRIVACY.md",
       "ACCESSIBILITY.md",
-      "THIRD_PARTY_NOTICES.md"
+      "THIRD_PARTY_NOTICES.md",
+      "SIGNING.md",
+      "certificates/**/*"
     ],
     "win": {
       "target": "nsis",

@@ -31,6 +31,10 @@ I contenuti incollati o importati vengono elaborati sul dispositivo. Il controll
 - [Accessibilità e autovalutazione WCAG 2.1 AA](ACCESSIBILITY.md)
 - [Componenti e licenze di terze parti](THIRD_PARTY_NOTICES.md)
 
+## Firma digitale
+
+Dalla versione 1.4.1 eseguibile e installer sono firmati con Authenticode usando il certificato di **Carlos H. P. Ross / WolCarlos**. Il certificato attuale è autofirmato e non elimina automaticamente SmartScreen. Identità, impronta, limiti e procedura per una futura CA OV/EV sono documentati in [SIGNING.md](SIGNING.md).
+
 ## Sviluppo
 
 Requisiti: Node.js 24 o successivo e npm.

@@ -12,6 +12,7 @@
 - Informative GDPR, WCAG/Legge Stanca e licenze in `PRIVACY.md`, `ACCESSIBILITY.md`, `THIRD_PARTY_NOTICES.md`, `licenses/`.
 - Installer NSIS aggiornabile sopra l’installazione esistente; preferenze conservate nella cartella utente storica `Testo Chiaro`.
 - Release Windows automatizzata da `.github/workflows/release.yml` al push dei tag `v*`.
+- Firma Authenticode dalla 1.4.1 con certificato autofirmato `Carlos H. P. Ross / WolCarlos`; PFX e password solo in `private/` e segreti GitHub, mai versionati. Dettagli in `SIGNING.md`.
 
 # Database Schema
 

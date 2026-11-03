@@ -27,7 +27,18 @@ jobs:
       - name: Esegue i test
         run: npm test
 
-      - name: Compila l’installer
+      - name: Prepara il certificato di firma
+        shell: pwsh
+        env:
+          WOL_CSC_BASE64: ${{ secrets.WOL_EDIT_TEXT_CSC_BASE64 }}
+          WOL_CSC_PASSWORD: ${{ secrets.WOL_EDIT_TEXT_CSC_PASSWORD }}
+        run: |
+          $certificatePath = Join-Path $env:RUNNER_TEMP "wol-edit-text-signing.pfx"
+          [IO.File]::WriteAllBytes($certificatePath, [Convert]::FromBase64String($env:WOL_CSC_BASE64))
+          "CSC_LINK=$certificatePath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "CSC_KEY_PASSWORD=$env:WOL_CSC_PASSWORD" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Compila e firma l’installer
         run: npm run dist
 
       - name: Pubblica i file della release

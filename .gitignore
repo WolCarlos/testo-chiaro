@@ -21,6 +21,7 @@ tests/artifacts/
 Thumbs.db
 
 # Configurazioni locali e credenziali
+private/
 .env
 .env.*
 !.env.example

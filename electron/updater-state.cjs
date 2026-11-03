@@ -2,6 +2,11 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 
 const RELEASE_NOTES = {
+  '1.4.1': [
+    'Installer ed eseguibile Windows firmati con Authenticode.',
+    'Identità del certificato: Carlos H. P. Ross / WolCarlos.',
+    'Istruzioni per verificare la firma e comprendere i limiti dei certificati autofirmati in SIGNING.md.',
+  ],
   '1.4.0': [
     'Nuova schermata Novità al primo avvio di ogni versione.',
     'Download e installazione degli aggiornamenti solo dopo la tua conferma.',

@@ -106,7 +106,7 @@ async function run() {
   assert.equal(updatePanelResult.open, true);
   assert.equal(updatePanelResult.closed, true);
   assert(updatePanelResult.text.includes('versione desktop installata'));
-  assert(updatePanelResult.version.includes('1.4.0'));
+  assert(updatePanelResult.version.includes('1.4.1'));
 
   const legalResult = await window.webContents.executeJavaScript(`(() => {
     document.querySelector('#helpButton').click();
