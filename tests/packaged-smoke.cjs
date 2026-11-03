@@ -3,7 +3,7 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const { version } = require('../package.json');
 
-const executable = path.join(__dirname, '..', 'packages', version, 'win-unpacked', 'Wol Edit Text.exe');
+const executable = process.env.TESTO_CHIARO_EXECUTABLE || path.join(__dirname, '..', 'packages', version, 'win-unpacked', 'Wol Edit Text.exe');
 const onlineUpdateTest = process.env.TESTO_CHIARO_ONLINE_TEST === '1';
 const environment = { ...process.env };
 delete environment.ELECTRON_RUN_AS_NODE;

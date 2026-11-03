@@ -20,7 +20,7 @@ build({
   targets: configuration.platform.createTarget([configuration.target]),
   publish: 'never',
   config: {
-    directories: { output: path.join('packages', version) },
+    directories: { output: process.env.TESTO_CHIARO_BUILD_OUTPUT || path.join('packages', version) },
   },
 })
   .then((artifacts) => {
