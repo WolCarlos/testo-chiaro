@@ -60,6 +60,7 @@ async function run() {
       editor.dispatchEvent(new Event('input', { bubbles: true }));
       await new Promise(resolve => setTimeout(resolve, 100));
       const updateCheck = await window.testoChiaro.checkForUpdates();
+      const releaseInfo = await window.testoChiaro.getReleaseInfo();
       await new Promise(resolve => setTimeout(resolve, 300));
       return {
         title: document.title,
@@ -67,6 +68,9 @@ async function run() {
         pdfBridge: typeof window.testoChiaro?.exportPdf === 'function',
         saveBridge: typeof window.testoChiaro?.saveText === 'function',
         updateBridge: typeof window.testoChiaro?.installUpdate === 'function',
+        downloadBridge: typeof window.testoChiaro?.downloadUpdate === 'function',
+        releaseVersion: releaseInfo.currentVersion,
+        showWhatsNew: releaseInfo.showWhatsNew,
         updateStatus: updateCheck.status,
         updateOk: updateCheck.ok,
         updatePanelText: document.querySelector('#updateStatusText').textContent,
@@ -85,6 +89,9 @@ async function run() {
   assert.equal(result.pdfBridge, true);
   assert.equal(result.saveBridge, true);
   assert.equal(result.updateBridge, true);
+  assert.equal(result.downloadBridge, true);
+  assert.equal(result.releaseVersion, version);
+  assert.equal(result.showWhatsNew, false);
   if (onlineUpdateTest) {
     assert.equal(result.updateOk, true);
     assert(result.updatePanelText.includes('ultima versione'));

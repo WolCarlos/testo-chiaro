@@ -106,7 +106,22 @@ async function run() {
   assert.equal(updatePanelResult.open, true);
   assert.equal(updatePanelResult.closed, true);
   assert(updatePanelResult.text.includes('versione desktop installata'));
-  assert(updatePanelResult.version.includes('1.3.0'));
+  assert(updatePanelResult.version.includes('1.4.0'));
+
+  const legalResult = await window.webContents.executeJavaScript(`(() => {
+    document.querySelector('#helpButton').click();
+    document.querySelector('#openLegalButton').click();
+    const result = {
+      open: document.querySelector('#legalDialog').open,
+      text: document.querySelector('#legalDialog').textContent
+    };
+    document.querySelector('#legalConfirm').click();
+    document.querySelector('#closeHelp').click();
+    return result;
+  })()`);
+  assert.equal(legalResult.open, true);
+  assert(legalResult.text.includes('GDPR'));
+  assert(legalResult.text.includes('WCAG 2.1 AA'));
 
   const printWindow = new BrowserWindow({ show: false, webPreferences: { sandbox: true, javascript: false } });
   const printable = `<!doctype html><html lang="it"><head><meta charset="utf-8"><style>@page{size:A4;margin:22mm}body{font-family:Arial,sans-serif;font-size:11pt;line-height:1.5;color:#111827}table{border-collapse:collapse;width:100%}td,th{border:1px solid #bbb;padding:8px}</style></head><body><main>${markdownResult.html}</main></body></html>`;

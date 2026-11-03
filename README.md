@@ -19,13 +19,17 @@ Wol Edit Text è un’app desktop locale per pulire la formattazione dei testi c
 
 Scarica l’installer Windows più recente dalla pagina [Releases](https://github.com/WolCarlos/testo-chiaro/releases/latest) ed eseguilo.
 
-Dalla versione 1.2.0 l’app controlla automaticamente gli aggiornamenti all’avvio. È anche possibile usare il pulsante **Aggiornamenti** nell’intestazione. Quando una nuova versione è pronta, l’app propone **Aggiorna e riavvia**.
+L’app controlla gli aggiornamenti all’avvio e tramite il pulsante **Aggiornamenti**. Dalla versione 1.4.0 il download e l’installazione richiedono conferme separate; nessun aggiornamento viene installato automaticamente alla chiusura. Dopo l’aggiornamento la cache dei vecchi installer viene ripulita e al primo avvio viene mostrata la schermata **Novità**.
 
-Le versioni precedenti devono essere aggiornate una volta alla 1.2.0 o successiva tramite installer manuale.
+Le versioni precedenti alla 1.2.0 devono essere aggiornate una volta tramite installer manuale.
 
-## Privacy
+## Privacy, accessibilità e licenze
 
 I contenuti incollati o importati vengono elaborati sul dispositivo. Il controllo aggiornamenti contatta esclusivamente GitHub e non trasmette il contenuto dei documenti. Immagini remote eventualmente conservate possono essere caricate dal loro indirizzo originale durante la visualizzazione.
+
+- [Informativa privacy e GDPR](PRIVACY.md)
+- [Accessibilità e autovalutazione WCAG 2.1 AA](ACCESSIBILITY.md)
+- [Componenti e licenze di terze parti](THIRD_PARTY_NOTICES.md)
 
 ## Sviluppo
 

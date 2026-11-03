@@ -444,9 +444,9 @@ function renderUpdateStatus(payload = {}) {
   const messages = {
     idle: 'Controlla se è disponibile una nuova versione.',
     checking: 'Controllo delle GitHub Releases in corso…',
-    available: payload.version ? `Versione ${payload.version} disponibile. Download in corso…` : 'Nuova versione disponibile. Download in corso…',
+    available: payload.version ? `Versione ${payload.version} disponibile. Puoi scaricarla quando vuoi.` : 'Nuova versione disponibile. Puoi scaricarla quando vuoi.',
     downloading: `Download dell’aggiornamento: ${payload.percent || 0}%.`,
-    downloaded: `Versione ${payload.version || ''} pronta. Riavvia per completare l’aggiornamento.`,
+    downloaded: `Versione ${payload.version || ''} pronta. Conferma tu quando riavviare e installare.`,
     'up-to-date': 'Hai già l’ultima versione disponibile.',
     development: 'Gli aggiornamenti automatici sono attivi nella versione desktop installata.',
     error: payload.message || 'Non è stato possibile controllare gli aggiornamenti.',
@@ -455,17 +455,18 @@ function renderUpdateStatus(payload = {}) {
   $('#updateStatusText').textContent = messages[status] || messages.idle;
   $('#updateStatusIcon').textContent = icons[status] || '↻';
   $('#checkUpdatesButton').disabled = ['checking', 'available', 'downloading'].includes(status);
+  $('#downloadUpdateButton').hidden = status !== 'available';
+  if (status === 'available') $('#downloadUpdateButton').disabled = false;
   $('#installUpdateButton').hidden = status !== 'downloaded';
   const progress = $('#updateProgress');
-  progress.hidden = !['available', 'downloading'].includes(status);
-  if (status === 'available') progress.removeAttribute('value');
+  progress.hidden = status !== 'downloading';
   if (status === 'downloading') progress.value = payload.percent || 0;
 
   const busy = ['checking', 'available', 'downloading'].includes(status);
   $('#updateButton').classList.toggle('has-update', busy || status === 'downloaded');
   $('#updateButtonLabel').textContent = status === 'downloaded' ? 'Aggiorna e riavvia'
     : status === 'downloading' ? `Aggiornamento ${payload.percent || 0}%`
-      : status === 'available' ? 'Download…'
+      : status === 'available' ? 'Nuova versione'
         : status === 'checking' ? 'Controllo…' : 'Aggiornamenti';
   if (status === 'downloaded') announce(`Wol Edit Text ${payload.version || ''} è pronto per l’installazione.`);
 }
@@ -486,6 +487,15 @@ $('#updateButton').addEventListener('click', () => {
   if (!['checking', 'available', 'downloading', 'downloaded'].includes(lastUpdateStatus)) checkForUpdates();
 });
 $('#checkUpdatesButton').addEventListener('click', checkForUpdates);
+$('#downloadUpdateButton').addEventListener('click', async () => {
+  if (!window.testoChiaro?.downloadUpdate) return;
+  $('#downloadUpdateButton').disabled = true;
+  const result = await window.testoChiaro.downloadUpdate();
+  if (!result.ok) {
+    $('#downloadUpdateButton').disabled = false;
+    renderUpdateStatus({ status: 'error', message: result.error });
+  }
+});
 $('#installUpdateButton').addEventListener('click', async () => {
   if (!window.testoChiaro?.installUpdate) return;
   $('#installUpdateButton').disabled = true;
@@ -503,6 +513,35 @@ if (window.testoChiaro?.onUpdateStatus) window.testoChiaro.onUpdateStatus(render
 if (window.testoChiaro?.getVersion) {
   window.testoChiaro.getVersion().then((version) => {
     $('#currentVersion').textContent = `Versione installata: ${version}`;
+  });
+}
+
+const whatsNewDialog = $('#whatsNewDialog');
+const legalDialog = $('#legalDialog');
+$('#closeWhatsNewDialog').addEventListener('click', () => whatsNewDialog.close());
+$('#whatsNewConfirm').addEventListener('click', () => whatsNewDialog.close());
+$('#openLegalButton').addEventListener('click', () => legalDialog.showModal());
+$('#closeLegalDialog').addEventListener('click', () => legalDialog.close());
+$('#legalConfirm').addEventListener('click', () => legalDialog.close());
+for (const dialog of [whatsNewDialog, legalDialog]) {
+  dialog.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+}
+if (window.testoChiaro?.getReleaseInfo) {
+  window.testoChiaro.getReleaseInfo().then((info) => {
+    if (!info.showWhatsNew) return;
+    $('#whatsNewVersion').textContent = info.previousVersion
+      ? `Aggiornamento dalla ${info.previousVersion} alla ${info.currentVersion}`
+      : `Benvenuto nella versione ${info.currentVersion}`;
+    const list = $('#whatsNewList');
+    list.replaceChildren();
+    for (const note of info.notes) {
+      const item = document.createElement('li');
+      item.textContent = note;
+      list.append(item);
+    }
+    whatsNewDialog.showModal();
   });
 }
 

@@ -143,7 +143,7 @@
                 <div class="setting-content form-grid">
                   <label>Carattere finale<select data-option="fontFamily"><option value="Arial, Helvetica, sans-serif">Arial</option><option value="Calibri, Arial, sans-serif">Calibri</option><option value="Georgia, serif">Georgia</option><option value="'Times New Roman', Times, serif">Times New Roman</option><option value="Verdana, Geneva, sans-serif">Verdana</option><option value="system-ui, sans-serif">Carattere di sistema</option></select></label>
                   <label>Dimensione finale<div class="input-unit"><input type="number" data-option="fontSize" min="8" max="48" step="1" /><span>pt</span></div></label>
-                  <label>Interlinea finale<select data-option="lineHeight"><option value="1.3">Compatta</option><option value="1.5">Normale</option><option value="1.8">Ampia</option><option value="2">Doppia</option></select></label>
+                  <label>Interlinea finale<select data-option="lineHeight"><option value="1.4">Compatta</option><option value="1.5">Normale</option><option value="1.8">Ampia</option><option value="2">Doppia</option></select></label>
                 </div>
               </details>
 
@@ -161,12 +161,12 @@
           </aside>
         </div>
       </main>
-      <footer class="status-bar"><span id="statusMessage" role="status" aria-live="polite">Pronto. Incolla un testo per iniziare.</span><span>Wol Edit Text 1.3 · HTML sicuro</span></footer>
+      <footer class="status-bar"><span id="statusMessage" role="status" aria-live="polite">Pronto. Incolla un testo per iniziare.</span><span>Wol Edit Text 1.4 · HTML sicuro</span></footer>
     </div>
 
     <dialog id="updateDialog" class="update-dialog" aria-labelledby="updateDialogTitle">
       <div class="dialog-heading"><h2 id="updateDialogTitle">Aggiornamenti</h2><button class="icon-button" id="closeUpdateDialog" aria-label="Chiudi gli aggiornamenti">×</button></div>
-      <p id="currentVersion" class="current-version">Versione installata: 1.3.0</p>
+      <p id="currentVersion" class="current-version">Versione installata: 1.4.0</p>
       <div class="update-status-card">
         <span id="updateStatusIcon" class="update-status-icon" aria-hidden="true">↻</span>
         <p id="updateStatusText" role="status" aria-live="polite">Controlla se è disponibile una nuova versione.</p>
@@ -175,8 +175,27 @@
       <p class="update-source">Distribuzione tramite GitHub Releases. Il controllo non trasmette i tuoi documenti.</p>
       <div class="dialog-actions">
         <button class="button" id="checkUpdatesButton">Controlla ora</button>
+        <button class="button accent" id="downloadUpdateButton" hidden>Scarica aggiornamento</button>
         <button class="button accent" id="installUpdateButton" hidden>Aggiorna e riavvia</button>
       </div>
+    </dialog>
+
+    <dialog id="whatsNewDialog" class="update-dialog" aria-labelledby="whatsNewTitle">
+      <div class="dialog-heading"><h2 id="whatsNewTitle">Novità di Wol Edit Text</h2><button class="icon-button" id="closeWhatsNewDialog" aria-label="Chiudi le novità">×</button></div>
+      <p id="whatsNewVersion" class="current-version">Versione 1.4.0</p>
+      <ul id="whatsNewList" class="whats-new-list"></ul>
+      <div class="dialog-actions"><button class="button accent" id="whatsNewConfirm">Ho capito</button></div>
+    </dialog>
+
+    <dialog id="legalDialog" aria-labelledby="legalTitle">
+      <div class="dialog-heading"><h2 id="legalTitle">Privacy, accessibilità e licenze</h2><button class="icon-button" id="closeLegalDialog" aria-label="Chiudi l’informativa">×</button></div>
+      <h3>Privacy e GDPR</h3>
+      <p>I documenti restano sul dispositivo e non vengono trasmessi a un nostro server. Non sono presenti account, pubblicità, analytics o profilazione. Il solo controllo degli aggiornamenti contatta GitHub: il fornitore può registrare indirizzo IP e dati tecnici della connessione secondo la propria informativa.</p>
+      <h3>Accessibilità</h3>
+      <p>L’interfaccia usa testo reale, focus visibile, navigazione da tastiera, ruoli semantici e un’area dedicata a Lettura automatica. L’obiettivo progettuale è WCAG 2.1 AA, in linea con i riferimenti della Legge Stanca. Questa è un’autovalutazione tecnica, non una certificazione legale.</p>
+      <h3>Componenti di terze parti</h3>
+      <p>L’app distribuisce componenti open source con relative licenze. I dettagli sono inclusi nei file PRIVACY.md, ACCESSIBILITY.md e THIRD_PARTY_NOTICES.md del pacchetto e del repository.</p>
+      <div class="dialog-actions"><button class="button accent" id="legalConfirm">Ho capito</button></div>
     </dialog>
 
     <dialog id="helpDialog" aria-labelledby="helpTitle">
@@ -191,7 +210,9 @@
       <h3>Scorciatoie</h3>
       <ul><li><kbd>Ctrl</kbd> + <kbd>V</kbd>: incolla mantenendo il contenuto</li><li><kbd>Ctrl</kbd> + <kbd>Maiusc</kbd> + <kbd>V</kbd>: incolla come testo semplice</li><li><kbd>Ctrl</kbd> + <kbd>S</kbd>: esporta nel formato scelto</li><li><kbd>Ctrl</kbd> + <kbd>Z</kbd> / <kbd>Ctrl</kbd> + <kbd>Y</kbd>: annulla / ripeti</li></ul>
       <h3>Aggiornamenti</h3>
-      <p>L’app controlla automaticamente GitHub Releases all’avvio. Puoi anche premere <strong>Aggiornamenti</strong> nell’intestazione e poi <strong>Controlla ora</strong>. Al termine del download scegli <strong>Aggiorna e riavvia</strong>: impostazioni e tema dell’anteprima vengono conservati.</p>
+      <p>L’app controlla le GitHub Releases all’avvio ma non scarica né installa senza il tuo consenso. Premi <strong>Scarica aggiornamento</strong> e, al termine, <strong>Aggiorna e riavvia</strong>. Alla chiusura non viene installato nulla automaticamente.</p>
+      <h3>Privacy e accessibilità</h3>
+      <p>Consulta l’informativa su trattamento dei dati, GDPR, accessibilità e licenze incluse nell’app. <button class="text-button" id="openLegalButton">Apri l’informativa</button></p>
       <p class="privacy-note">Nessun testo viene caricato online. Le immagini remote eventualmente conservate possono essere recuperate dal loro indirizzo originale durante la visualizzazione.</p>
     </dialog>
     <script type="module" src="/src/main.js"></script>

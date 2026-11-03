@@ -71,7 +71,12 @@ button:disabled { opacity: .38; cursor: not-allowed; }
 .update-status-icon { flex: 0 0 auto; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-size: 20px; }
 #updateProgress { width: 100%; height: 9px; margin-top: 15px; accent-color: var(--accent); }
 .update-source { margin-bottom: 18px; font-size: 11px !important; }
-.dialog-actions { display: flex; justify-content: flex-end; gap: 9px; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 18px; }
+.whats-new-list { display: grid; gap: 11px; margin: 0; padding: 0; list-style: none; }
+.whats-new-list li { position: relative; padding-left: 27px; color: var(--text); font-size: 13px; line-height: 1.55; }
+.whats-new-list li::before { content: "✓"; position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 19px; height: 19px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-size: 11px; font-weight: 800; }
+#legalDialog { width: min(650px, calc(100vw - 32px)); }
+#openLegalButton { display: inline; padding: 0; }
 .icon-button { border: 0; background: transparent; width: 34px; height: 34px; border-radius: 8px; display: inline-grid; place-items: center; font-size: 18px; }
 .icon-button:hover { background: var(--surface-soft); }
 .icon-button.bordered { border: 1px solid var(--border); background: var(--surface); font-size: 19px; }

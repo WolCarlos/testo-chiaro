@@ -7,18 +7,21 @@
 - Conversione Markdown sicura in `src/markdown.js`.
 - Anteprima semantica per Lettura automatica, con tema chiaro/scuro indipendente e copia dedicata.
 - Esportazione TXT, HTML, Markdown e PDF tramite `electron/main.cjs`.
-- Aggiornamenti automatici con `electron-updater` e GitHub Releases.
+- Aggiornamenti con `electron-updater`: controllo automatico, download e installazione solo dopo conferma; nessuna installazione alla chiusura.
+- Schermata Novità al primo avvio di ogni versione e pulizia cache gestite da `electron/updater-state.cjs`.
+- Informative GDPR, WCAG/Legge Stanca e licenze in `PRIVACY.md`, `ACCESSIBILITY.md`, `THIRD_PARTY_NOTICES.md`, `licenses/`.
 - Installer NSIS aggiornabile sopra l’installazione esistente; preferenze conservate nella cartella utente storica `Testo Chiaro`.
 - Release Windows automatizzata da `.github/workflows/release.yml` al push dei tag `v*`.
 
 # Database Schema
 
 - Nessun database. Preferenze locali in `localStorage`; dati utente non eliminati dall’aggiornamento.
+- `update-state.json`: ultima versione avviata e data, usato per Novità e pulizia cache.
 
 # API Endpoints
 
 - Nessun backend proprio.
-- IPC `save-text`, `export-pdf`, `updates:get-version`, `updates:check`, `updates:install`.
+- IPC `save-text`, `export-pdf`, `updates:get-version`, `updates:get-release-info`, `updates:check`, `updates:download`, `updates:install`.
 - Evento IPC `updates:status` per stato controllo/download/installazione.
 - Provider aggiornamenti: GitHub Releases pubbliche.
 

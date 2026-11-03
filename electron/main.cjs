@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog, shell, protocol, net } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const { prepareVersionState } = require('./updater-state.cjs');
 const path = require('node:path');
 const fs = require('node:fs/promises');
 const { pathToFileURL } = require('node:url');
@@ -149,6 +150,7 @@ ipcMain.handle('export-pdf', async (event, { html, title, options }) => {
 const updatesDisabled = !app.isPackaged || process.env.TESTO_CHIARO_DISABLE_UPDATES === '1';
 let downloadedUpdateVersion = null;
 let updatePromptOpen = false;
+let releaseInfo = { currentVersion: app.getVersion(), previousVersion: null, showWhatsNew: false, notes: [] };
 
 function sendUpdateStatus(status, details = {}) {
   if (mainWindow && !mainWindow.isDestroyed()) {
@@ -168,6 +170,7 @@ function updateErrorMessage(error) {
 }
 
 ipcMain.handle('updates:get-version', () => app.getVersion());
+ipcMain.handle('updates:get-release-info', () => releaseInfo);
 
 ipcMain.handle('updates:check', async () => {
   if (updatesDisabled) {
@@ -175,6 +178,18 @@ ipcMain.handle('updates:check', async () => {
   }
   try {
     await autoUpdater.checkForUpdates();
+    return { ok: true };
+  } catch (error) {
+    const message = updateErrorMessage(error);
+    sendUpdateStatus('error', { message });
+    return { ok: false, error: message };
+  }
+});
+
+ipcMain.handle('updates:download', async () => {
+  if (updatesDisabled) return { ok: false, error: 'Download disponibile solo nella versione installata.' };
+  try {
+    await autoUpdater.downloadUpdate();
     return { ok: true };
   } catch (error) {
     const message = updateErrorMessage(error);
@@ -192,8 +207,8 @@ ipcMain.handle('updates:install', () => {
 
 function setupAutoUpdates() {
   if (updatesDisabled) return;
-  autoUpdater.autoDownload = true;
-  autoUpdater.autoInstallOnAppQuit = true;
+  autoUpdater.autoDownload = false;
+  autoUpdater.autoInstallOnAppQuit = false;
   autoUpdater.allowPrerelease = false;
 
   autoUpdater.on('checking-for-update', () => sendUpdateStatus('checking'));
@@ -218,7 +233,7 @@ function setupAutoUpdates() {
         cancelId: 1,
         title: 'Aggiornamento pronto',
         message: `Wol Edit Text ${info.version} è pronto per essere installato.`,
-        detail: 'Il download è completato. Riavvia ora per applicare l’aggiornamento oppure installalo alla prossima chiusura dell’app.',
+        detail: 'Il download è completato. L’aggiornamento verrà installato soltanto se confermi con “Aggiorna e riavvia”. Se scegli “Più tardi”, non verrà installato automaticamente alla chiusura.',
       });
       if (result.response === 0) autoUpdater.quitAndInstall(false, true);
     } finally {
@@ -232,13 +247,24 @@ function setupAutoUpdates() {
   }, 4000);
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   protocol.handle('app', (request) => {
     const pathname = decodeURIComponent(new URL(request.url).pathname);
     const filePath = path.resolve(distDirectory, `.${pathname}`);
     if (filePath !== distDirectory && !filePath.startsWith(`${distDirectory}${path.sep}`)) return new Response('Non consentito', { status: 403 });
     return net.fetch(pathToFileURL(filePath).toString());
   });
+  try {
+    releaseInfo = await prepareVersionState({
+      userDataPath: app.getPath('userData'),
+      currentVersion: app.getVersion(),
+      cacheDirectory: path.join(autoUpdater.app.baseCachePath, 'wol-edit-text-updater'),
+      cleanCache: !updatesDisabled,
+    });
+    releaseInfo.showWhatsNew = !updatesDisabled && releaseInfo.showWhatsNew;
+  } catch (error) {
+    console.warn('Impossibile aggiornare lo stato della versione:', error.message);
+  }
   createWindow();
   setupAutoUpdates();
   app.on('activate', () => {
