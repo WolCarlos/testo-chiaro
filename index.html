@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https: http:; font-src 'self' data:; connect-src 'self' ws: http: https:; object-src 'none'; base-uri 'none'" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Testo Chiaro</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#preview">Vai al testo convertito</a>
+    <div id="app">
+      <header class="app-header">
+        <div class="brand" aria-label="Testo Chiaro">
+          <span class="brand-mark" aria-hidden="true">T<span>✓</span></span>
+          <div><strong>Testo Chiaro</strong><small>Il testo è tuo. Il formato anche.</small></div>
+        </div>
+        <div class="header-actions">
+          <span class="local-badge"><span class="status-dot"></span> Solo sul tuo dispositivo</span>
+          <button class="update-button" id="updateButton" title="Controlla gli aggiornamenti" aria-label="Controlla gli aggiornamenti"><span aria-hidden="true">↻</span><span id="updateButtonLabel">Aggiornamenti</span></button>
+          <button class="icon-button" id="helpButton" title="Guida e scorciatoie" aria-label="Apri la guida">?</button>
+          <button class="icon-button" id="themeButton" title="Cambia tema" aria-label="Attiva tema scuro"><span id="themeIcon" aria-hidden="true">☾</span></button>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <section class="action-bar" aria-label="Azioni principali">
+          <div class="action-group">
+            <button class="button primary" id="pasteButton"><span aria-hidden="true">▣</span> Incolla dagli appunti <kbd>Ctrl V</kbd></button>
+            <button class="button" id="importButton"><span aria-hidden="true">↥</span> Importa file</button>
+            <input id="fileInput" type="file" accept=".txt,.md,.markdown,.html,.htm,text/plain,text/markdown,text/html" hidden />
+          </div>
+          <div class="action-group right-actions">
+            <button class="icon-button bordered" id="undoButton" title="Annulla (Ctrl+Z)" aria-label="Annulla" disabled>↶</button>
+            <button class="icon-button bordered" id="redoButton" title="Ripeti (Ctrl+Y)" aria-label="Ripeti" disabled>↷</button>
+            <span class="toolbar-separator"></span>
+            <button class="button accent" id="copyButton"><span aria-hidden="true">⧉</span> Copia testo pulito</button>
+            <div class="export-group">
+              <label class="sr-only" for="exportFormat">Formato di esportazione</label>
+              <select id="exportFormat" aria-label="Formato di esportazione">
+                <option value="pdf">PDF</option>
+                <option value="html">HTML</option>
+                <option value="md">Markdown</option>
+                <option value="txt">Testo semplice</option>
+              </select>
+              <button class="button" id="exportButton"><span aria-hidden="true">↧</span> Esporta</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="workspace">
+          <section class="panel editor-panel" aria-labelledby="editorTitle">
+            <div class="panel-heading">
+              <div><span class="step-number">1</span><h2 id="editorTitle">Incolla il testo</h2></div>
+              <div class="segmented" role="tablist" aria-label="Tipo di testo in ingresso">
+                <button id="richTab" role="tab" aria-selected="true" aria-controls="richEditor" data-mode="rich">Testo formattato</button>
+                <button id="markdownTab" role="tab" aria-selected="false" aria-controls="markdownEditor" data-mode="markdown">Markdown</button>
+              </div>
+            </div>
+            <div class="editor-wrap">
+              <div id="richEditor" class="rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Testo formattato da pulire" aria-describedby="editorHint" data-placeholder="Incolla qui il testo copiato…" spellcheck="true"></div>
+              <textarea id="markdownEditor" class="markdown-editor" aria-label="Codice Markdown da convertire" placeholder="# Scrivi o incolla qui il Markdown…" spellcheck="true" hidden></textarea>
+            </div>
+            <div class="editor-footer">
+              <span id="editorHint">I contenuti vengono elaborati solo localmente.</span>
+              <button class="text-button danger" id="clearButton">Svuota</button>
+            </div>
+          </section>
+
+          <section class="panel preview-panel" aria-labelledby="previewTitle">
+            <div class="panel-heading">
+              <div><span class="step-number">2</span><h2 id="previewTitle">Anteprima pulita</h2></div>
+              <div class="preview-actions">
+                <button class="icon-button bordered" id="previewThemeButton" title="Attiva anteprima scura" aria-label="Attiva anteprima scura"><span id="previewThemeIcon" aria-hidden="true">☾</span></button>
+                <button class="text-button" id="previewCopyButton" title="Copia il testo pulito senza lo sfondo dell’anteprima"><span aria-hidden="true">⧉</span> Copia</button>
+                <button class="text-button" id="focusPreviewButton" title="Porta il focus sul testo per Lettura automatica"><span aria-hidden="true">◉</span> Leggi da qui</button>
+              </div>
+            </div>
+            <div class="preview-wrap">
+              <article id="preview" class="document-preview" tabindex="0" role="document" aria-label="Testo convertito. Premi Control più Alt più Invio per avviare Lettura automatica da questo punto." aria-describedby="readingHint">
+                <p class="empty-preview">L’anteprima del testo pulito apparirà qui.</p>
+              </article>
+            </div>
+            <div class="preview-footer">
+              <span id="readingHint"><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Invio</kbd> dopo aver attivato “Leggi da qui”</span>
+              <span id="wordCount">0 parole · 0 caratteri</span>
+            </div>
+          </section>
+
+          <aside class="panel settings-panel" aria-labelledby="settingsTitle">
+            <div class="settings-heading"><div><span class="settings-icon" aria-hidden="true">☷</span><h2 id="settingsTitle">Pannello formati</h2></div><button class="text-button" id="resetOptions">Ripristina</button></div>
+            <div class="settings-scroll">
+              <section class="setting-section">
+                <label class="field-label" for="preset">Pulizia rapida</label>
+                <select id="preset" class="full-width">
+                  <option value="recommended">Consigliata per e-mail</option>
+                  <option value="plain">Solo testo semplice</option>
+                  <option value="structure">Mantieni struttura e stili</option>
+                  <option value="custom">Personalizzata</option>
+                </select>
+                <p class="setting-description">Rimuove i residui della modalità scura senza perdere la struttura.</p>
+              </section>
+
+              <details class="setting-section" open>
+                <summary>Colori e caratteri <span aria-hidden="true">⌄</span></summary>
+                <div class="setting-content">
+                  <label class="switch-row"><span>Rimuovi colore del testo</span><input type="checkbox" data-option="removeColor" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi sfondi ed evidenziazioni</span><input type="checkbox" data-option="removeBackground" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi tipo di carattere</span><input type="checkbox" data-option="removeFontFamily" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi dimensione del carattere</span><input type="checkbox" data-option="removeFontSize" /><i></i></label>
+                  <label class="switch-row emphasis-setting"><span>Forza sfondo bianco e testo scuro</span><input type="checkbox" data-option="forceLight" /><i></i></label>
+                </div>
+              </details>
+
+              <details class="setting-section" open>
+                <summary>Stili e impaginazione <span aria-hidden="true">⌄</span></summary>
+                <div class="setting-content">
+                  <label class="switch-row"><span>Rimuovi grassetto</span><input type="checkbox" data-option="removeBold" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi corsivo</span><input type="checkbox" data-option="removeItalic" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi sottolineato</span><input type="checkbox" data-option="removeUnderline" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi testo barrato</span><input type="checkbox" data-option="removeStrike" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi allineamento</span><input type="checkbox" data-option="removeAlignment" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi interlinea e spaziatura</span><input type="checkbox" data-option="removeLineSpacing" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi margini, rientri e bordi</span><input type="checkbox" data-option="removeLayout" /><i></i></label>
+                </div>
+              </details>
+
+              <details class="setting-section">
+                <summary>Elementi del contenuto <span aria-hidden="true">⌄</span></summary>
+                <div class="setting-content">
+                  <label class="switch-row"><span>Rimuovi collegamenti</span><input type="checkbox" data-option="removeLinks" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi immagini</span><input type="checkbox" data-option="removeImages" /><i></i></label>
+                  <label class="switch-row"><span>Trasforma titoli in testo normale</span><input type="checkbox" data-option="removeHeadings" /><i></i></label>
+                  <label class="switch-row"><span>Trasforma elenchi in paragrafi</span><input type="checkbox" data-option="removeLists" /><i></i></label>
+                  <label class="switch-row"><span>Trasforma tabelle in testo</span><input type="checkbox" data-option="removeTables" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi formato codice</span><input type="checkbox" data-option="removeCode" /><i></i></label>
+                  <label class="switch-row"><span>Rimuovi formato citazione</span><input type="checkbox" data-option="removeQuotes" /><i></i></label>
+                </div>
+              </details>
+
+              <details class="setting-section" open>
+                <summary>Normalizzazione <span aria-hidden="true">⌄</span></summary>
+                <div class="setting-content form-grid">
+                  <label>Carattere finale<select data-option="fontFamily"><option value="Arial, Helvetica, sans-serif">Arial</option><option value="Calibri, Arial, sans-serif">Calibri</option><option value="Georgia, serif">Georgia</option><option value="'Times New Roman', Times, serif">Times New Roman</option><option value="Verdana, Geneva, sans-serif">Verdana</option><option value="system-ui, sans-serif">Carattere di sistema</option></select></label>
+                  <label>Dimensione finale<div class="input-unit"><input type="number" data-option="fontSize" min="8" max="48" step="1" /><span>pt</span></div></label>
+                  <label>Interlinea finale<select data-option="lineHeight"><option value="1.3">Compatta</option><option value="1.5">Normale</option><option value="1.8">Ampia</option><option value="2">Doppia</option></select></label>
+                </div>
+              </details>
+
+              <details class="setting-section">
+                <summary>Impostazioni PDF <span aria-hidden="true">⌄</span></summary>
+                <div class="setting-content form-grid">
+                  <label>Formato pagina<select data-option="pdfPageSize"><option value="A4">A4</option><option value="Letter">Letter</option></select></label>
+                  <label>Orientamento<select data-option="pdfLandscape"><option value="false">Verticale</option><option value="true">Orizzontale</option></select></label>
+                  <label>Margini<select data-option="pdfMargins"><option value="normal">Normali</option><option value="narrow">Stretti</option><option value="wide">Ampi</option></select></label>
+                  <label class="checkbox-row"><input type="checkbox" data-option="pdfIncludeTitle" /> Includi titolo documento</label>
+                  <label>Titolo / nome file<input type="text" data-option="documentTitle" maxlength="100" placeholder="Documento pulito" /></label>
+                </div>
+              </details>
+            </div>
+          </aside>
+        </div>
+      </main>
+      <footer class="status-bar"><span id="statusMessage" role="status" aria-live="polite">Pronto. Incolla un testo per iniziare.</span><span>Testo Chiaro 1.2 · HTML sicuro</span></footer>
+    </div>
+
+    <dialog id="updateDialog" class="update-dialog" aria-labelledby="updateDialogTitle">
+      <div class="dialog-heading"><h2 id="updateDialogTitle">Aggiornamenti</h2><button class="icon-button" id="closeUpdateDialog" aria-label="Chiudi gli aggiornamenti">×</button></div>
+      <p id="currentVersion" class="current-version">Versione installata: 1.2.0</p>
+      <div class="update-status-card">
+        <span id="updateStatusIcon" class="update-status-icon" aria-hidden="true">↻</span>
+        <p id="updateStatusText" role="status" aria-live="polite">Controlla se è disponibile una nuova versione.</p>
+      </div>
+      <progress id="updateProgress" max="100" value="0" aria-label="Avanzamento download aggiornamento" hidden></progress>
+      <p class="update-source">Distribuzione tramite GitHub Releases. Il controllo non trasmette i tuoi documenti.</p>
+      <div class="dialog-actions">
+        <button class="button" id="checkUpdatesButton">Controlla ora</button>
+        <button class="button accent" id="installUpdateButton" hidden>Aggiorna e riavvia</button>
+      </div>
+    </dialog>
+
+    <dialog id="helpDialog" aria-labelledby="helpTitle">
+      <div class="dialog-heading"><h2 id="helpTitle">Come usare Testo Chiaro</h2><button class="icon-button" id="closeHelp" aria-label="Chiudi la guida">×</button></div>
+      <ol class="help-steps">
+        <li><strong>Incolla o importa.</strong> Usa “Testo formattato” per contenuti copiati da siti, Word o e-mail; usa “Markdown” per file <code>.md</code>.</li>
+        <li><strong>Scegli cosa conservare.</strong> La configurazione consigliata elimina colori, sfondi scuri e stili superflui, mantenendo titoli, elenchi, tabelle e collegamenti.</li>
+        <li><strong>Copia o esporta.</strong> “Copia testo pulito” inserisce negli appunti sia HTML pulito sia testo semplice. Nell’anteprima puoi attivare il tema scuro con ☾ e usare “Copia”: il tema dell’anteprima non modifica mai il testo esportato o copiato.</li>
+      </ol>
+      <h3>Lettura automatica di Windows</h3>
+      <p>Il risultato è racchiuso in un’area semantica separata, con testo reale e selezionabile. Fai clic su <strong>Leggi da qui</strong>: il focus passa all’inizio del testo convertito. Avvia quindi Lettura automatica con <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Invio</kbd>, senza dover selezionare tutto il contenuto.</p>
+      <h3>Scorciatoie</h3>
+      <ul><li><kbd>Ctrl</kbd> + <kbd>V</kbd>: incolla mantenendo il contenuto</li><li><kbd>Ctrl</kbd> + <kbd>Maiusc</kbd> + <kbd>V</kbd>: incolla come testo semplice</li><li><kbd>Ctrl</kbd> + <kbd>S</kbd>: esporta nel formato scelto</li><li><kbd>Ctrl</kbd> + <kbd>Z</kbd> / <kbd>Ctrl</kbd> + <kbd>Y</kbd>: annulla / ripeti</li></ul>
+      <h3>Aggiornamenti</h3>
+      <p>L’app controlla automaticamente GitHub Releases all’avvio. Puoi anche premere <strong>Aggiornamenti</strong> nell’intestazione e poi <strong>Controlla ora</strong>. Al termine del download scegli <strong>Aggiorna e riavvia</strong>: impostazioni e tema dell’anteprima vengono conservati.</p>
+      <p class="privacy-note">Nessun testo viene caricato online. Le immagini remote eventualmente conservate possono essere recuperate dal loro indirizzo originale durante la visualizzazione.</p>
+    </dialog>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

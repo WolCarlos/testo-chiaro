@@ -1,0 +1,26 @@
+# Istruzioni e dati locali riservati
+AGENTS.md
+.codegraph/
+
+# Dipendenze
+node_modules/
+
+# Build e pacchetti locali
+dist/
+packages/
+release/
+installer/
+
+# Risultati dei test
+tests/artifacts/
+
+# Log e file temporanei
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Configurazioni locali e credenziali
+.env
+.env.*
+!.env.example
